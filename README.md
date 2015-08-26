@@ -1,1 +1,1 @@
-echo # -Algorithms
+Some algorithms.
