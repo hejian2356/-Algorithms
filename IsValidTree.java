@@ -6,7 +6,23 @@ class IsValidTree {
 	 * example: Given [[0, 1], [1, 2], [2, 0]], return false
 	 * example: Given [[0, 1], [1, 2], [2, 3]], return true
 	 */
-	boolean isValidTree(int[][] num) {
+public boolean validTree(int n, int[][] num) {
+        HashSet<Integer> hash0 = new HashSet<>();
+        if (num.length == 0) {
+            if (n == 1) {
+                return true;
+            }
+            return false;
+        }
+        for (int i = 0; i < num.length; i++) {
+            hash0.add(num[i][0]);
+            hash0.add(num[i][1]);
+        }
+        for (int i = 0; i < n; i++) {
+            if (!hash0.contains(i)) {
+                return false;
+            }
+        }
 		List<HashSet<Integer>> hash = new LinkedList<>();
 		for (int i = 0; i < num.length; i++) {
 			boolean flag = false;
