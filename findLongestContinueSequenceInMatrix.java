@@ -3,7 +3,7 @@ class FindLongestPath {
 	 * Given 7, 8, 6
                  9, 4, 5
                  2, 3, 1
-           return path length 5 (4, 5, 6, 7, 8).
+           return path length 5 (2, 3, 4, 5, 6).
 	 */
 	int[][] dir = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
 	private int dfs(int[][] matrix, int posj, int posi, int[][] dp) {
