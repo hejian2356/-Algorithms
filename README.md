@@ -1,1 +1,1 @@
-Some algorithms.
+Some interesting algorithms, just for fun:)
