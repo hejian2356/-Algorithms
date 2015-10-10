@@ -3,10 +3,10 @@ class Solution2 {
 	 * 3*3 Lock, give all the possible sequence
 	 */
 	class Pair {
-		char cur;
+		char visited;
 		char next;
-		public Pair(char cur, char next) {
-			this.cur = cur;
+		public Pair(char visited, char next) {
+			this.visited = visited;
 			this.next = next;
 		}
 	}
@@ -25,7 +25,7 @@ class Solution2 {
 		}
 		else {
 			for (Pair pair: next.get(sb.charAt(sb.length()-1))) {
-				if (visited[pair.cur-'0'] && !visited[pair.next-'0']) {
+				if (visited[pair.visited-'0'] && !visited[pair.next-'0']) {
 					sb.append(pair.next);
 					visited[pair.next-'0'] = true;
 					dfs(res, sb, hash, visited, next);
