@@ -157,6 +157,9 @@ public static class Token {
 			return res.toString();
 		}
 		Node root = dom.root;
+                if (root == null) {
+                        return "";
+                }
 		if (root instanceof Content) {
 			res.append(((Content)root).content);
 			return res.toString();
@@ -175,7 +178,7 @@ public static class Token {
 							cont.append(((Content)child).content);
 						}
 						else {
-							cont.append(""+((Content)child).content);
+							cont.append(" "+((Content)child).content);
 						}
 					}
 				}
