@@ -1,107 +1,71 @@
 class AlienWord {
-    private void helper(HashMap<Character, HashSet<Character>> hash, String[] words, int pos, int sta1, int end1) {
-        List<List<Integer>> list = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        char pre = 'a';
-        int sta = -1, end = -1;
-        for (int i = sta1; i <= end1; i++) {
-            if (pos >= words[i].length()) {
-                continue;
-            }
-            if (sb.length() == 0) {
-                pre = words[i].charAt(pos);
-                sb.append(pre);
-                sta = i;
-            }
-            else {
-                char cur = words[i].charAt(pos);
-                if (cur == pre) {
-                    continue;
-                }
-                end = i;
-                sb.append(cur);
-                pre = cur;
-                if (sta == end-1) {
-                    sta++;
-                    continue;
-                }
-                List<Integer> tmp = new ArrayList<>();
-                tmp.add(sta);
-                tmp.add(end-1);
-                list.add(tmp);
-                sta = end;
-            }
-        }
-        end = end1;
-        if (sta != end) {
-        	List<Integer> tmp = new ArrayList<>();
-            tmp.add(sta);
-            tmp.add(end);
-            list.add(tmp);
-        }
-        if (sb.length() == 0) {
-            return;
-        }
-        if (sb.length() == 1) {
-        	helper(hash, words, pos+1, sta1, end1);
-        	return;
-        }
-        char[] array = sb.toString().toCharArray();
-        for (int j = 0; j < array.length-1; j++) {
-            char c = array[j];
-            if (!hash.containsKey(c)) {
-                HashSet<Character> tmp = new HashSet<>();
-                hash.put(c, tmp);
-            }
-            HashSet<Character> tmp = hash.get(c);
-            for (int k = j+1; k < array.length; k++) {
-                tmp.add(array[k]);
-            }
-        }
-        for (List<Integer> tmp: list) {
-            helper(hash, words, pos+1, tmp.get(0), tmp.get(1));
-        }
-    }
-    
     public String alienOrder(String[] words) {
-        HashMap<Character, HashSet<Character>> hash = new HashMap<>();
-        int[] cha = new int[26];
-        HashSet<Character> num = new HashSet<>();
-        for (int i = 0; i < words.length; i++) {
-        	for (int j = 0; j < words[i].length(); j++) {
-        		num.add(words[i].charAt(j));
-        	}
-        }
-        helper(hash, words, 0, 0, words.length-1);
-        
-        StringBuilder sb = new StringBuilder();
-        Queue<Character> queue = new LinkedList<>();
-        for (char c: hash.keySet()) {
-            for (char c0: hash.get(c)) {
-                cha[c0-'a']++;
-            }
-        }
-        for (int i = 0; i < 26; i++) {
-            if (cha[i] == 0 && num.contains((char)(i+'a'))) {
-                queue.offer((char)(i+'a'));
-            }
-        }
-        while (!queue.isEmpty()) {
-            char c = queue.poll();
-            sb.append(c);
-            if (!hash.containsKey(c)) {
-                continue;
-            }
-            for (char c0: hash.get(c)) {
-                cha[c0-'a']--;
-                if (cha[c0-'a'] == 0) {
-                    queue.offer(c0);
-                }
-            }
-        }
-        if (sb.length() < num.size()) {
+        if (words == null || words.length == 0) {
             return "";
         }
-        return sb.toString();
+        if (words.length == 1) {
+            return words[0];
+        }
+        HashSet<Character> allCha = new HashSet<>();
+        for (int j = 0; j < words.length; j++) {
+            for (int i = 0; i < words[j].length(); i++) {
+                allCha.add(words[j].charAt(i));
+            }
+        }
+        HashMap<Character, HashSet<Character>> graph = new HashMap<>();
+        makeGraph(graph, words);
+        return toposort(allCha, graph);
+    }
+    
+    private String toposort(HashSet<Character> allCha, HashMap<Character, HashSet<Character>> graph) {
+        int[] visited = new int[26];
+        StringBuilder res = new StringBuilder();
+        for (char c: allCha) {
+            if (visited[c-'a'] == 0) {
+                if (!dfs(res, graph, visited, c)) {
+                    return "";
+                }
+            }
+        }
+        res.reverse();
+        return res.toString();
+    }
+    
+    private boolean dfs(StringBuilder res, HashMap<Character, HashSet<Character>> graph, int[] visited, char cur) {
+        visited[cur-'a'] = -1;
+        if (graph.containsKey(cur)) {
+            for (char next: graph.get(cur)) {
+                if (visited[next-'a'] == -1) {
+                    return false;
+                }
+                if (visited[next-'a'] == 0) {
+                    if (!dfs(res, graph, visited, next)) {
+                        return false;
+                    }
+                }
+            }
+        }
+        visited[cur-'a'] = 1;
+        res.append(cur);
+        return true;
+    }
+    
+    private void makeGraph(HashMap<Character, HashSet<Character>> graph, String[] words) {
+        for (int i = 1; i < words.length; i++) {
+            String s1 = words[i-1], s2 = words[i];
+            int len1 = s1.length(), len2 = s2.length(), l = len1 > len2 ? len1 : len2;
+            for (int j = 0; j < l; j++) {
+                if (j < len1 && !graph.containsKey(s1.charAt(j))) {
+                    graph.put(s1.charAt(j), new HashSet<>());
+                }
+                if (j < len2 && !graph.containsKey(s2.charAt(j))) {
+                    graph.put(s2.charAt(j), new HashSet<>());
+                }
+                if (j < len1 && j < len2 && s1.charAt(j) != s2.charAt(j)) {
+                    graph.get(s1.charAt(j)).add(s2.charAt(j));
+                    break;
+                }
+            }
+        }
     }
 }
