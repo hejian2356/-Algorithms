@@ -1,16 +1,16 @@
-public static class Token {
+	static class Token {
 		private final int commentId;
-		private final int setenceIndex;
+		private final int sentenceIndex;
 		private final String word;
 		
 		private Token(int commentId, int senId, String word) {
 			this.commentId = commentId;
-			this.setenceIndex = senId;
+			this.sentenceIndex = senId;
 			this.word = word;
 		}
 	}
 
-	public static class CoOccurrence implements Comparable<CoOccurrence>{
+	static class CoOccurrence implements Comparable<CoOccurrence>{
 		private final String word1;
 		private final String word2;
 		private final int count;
@@ -29,7 +29,7 @@ public static class Token {
 			return Integer.compare(o.count, count);
 		}
 	}
-	
+
 	static class MyCoOccurrence {
 		String s1;
 		String s2;
@@ -44,30 +44,20 @@ public static class Token {
 			return this.s1.equals(((MyCoOccurrence)c1).s1) && this.s2.equals(((MyCoOccurrence)c1).s2);
 		}
 	}
-	
-	static class Stas {
-		MyCoOccurrence coOccu;
-		int freq;
-		public Stas(MyCoOccurrence coOccu, int freq) {
-			this.coOccu = coOccu;
-			this.freq = freq;
-		}
-	}
-	
+
 	static List<CoOccurrence> findFrequenct(int n, Iterable<Token> tokens) {
 		Iterator<Token> ite = tokens.iterator();
 		List<Token> list = new ArrayList<>();
 		while (ite.hasNext()) {
 			list.add(ite.next());
 		}
-		
 		Collections.sort(list, new Comparator<Token>(){
 			public int compare(Token p1, Token p2) {
 				if (p1.commentId != p2.commentId) {
 					return p1.commentId-p2.commentId;
 				}
-				else if (p1.setenceIndex != p2.setenceIndex) {
-					return p1.setenceIndex-p2.setenceIndex;
+				else if (p1.sentenceIndex != p2.sentenceIndex) {
+					return p1.sentenceIndex-p2.sentenceIndex;
 				}
 				else {
 					return p1.word.compareTo(p2.word);
@@ -78,15 +68,16 @@ public static class Token {
 		int sta = 0;
 		while (sta < list.size()) {
 			List<String> tmp = new ArrayList<>();
-			int curj = list.get(sta).commentId, curi = list.get(sta).setenceIndex;
-			while (sta < list.size() && list.get(sta).commentId == curj && list.get(sta).setenceIndex == curi) {
-				tmp.add(list.get(sta).word);
+			int curj = list.get(sta).commentId, curi = list.get(sta).sentenceIndex;
+			while (sta < list.size() && list.get(sta).commentId == curj && list.get(sta).sentenceIndex == curi) {
+				if (!tmp.contains(list.get(sta).word)) {
+					tmp.add(list.get(sta).word);
+				}
 				sta++;
 			}
 			for (int j = 0; j < tmp.size()-1; j++) {
 				for (int i = j+1; i < tmp.size(); i++) {
 					MyCoOccurrence newPair = new MyCoOccurrence(tmp.get(j), tmp.get(i));
-					System.out.println(newPair.hashCode());
 					if (hash.containsKey(newPair)) {
 						hash.put(newPair, hash.get(newPair)+1);
 					}
