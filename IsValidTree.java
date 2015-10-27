@@ -1,3 +1,50 @@
+public class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        if (n != edges.length+1) {
+            return false;
+        }
+        List<List<Integer>> list = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            list.add(new ArrayList<>());
+        }
+        for (int i = 0; i < edges.length; i++) {
+            list.get(edges[i][0]).add(edges[i][1]);
+            list.get(edges[i][1]).add(edges[i][0]);
+        }
+        boolean[] visited = new boolean[n];
+        if (!dfs(list, visited, -1, 0)) {
+            return false;
+        }
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private boolean dfs(List<List<Integer>> list, boolean[] visited, int pre, int cur) {
+        if (visited[cur]) {
+            return true;
+        }
+        visited[cur] = true;
+        for (int next: list.get(cur)) {
+            if (!visited[next]) {
+                if (!dfs(list, visited, cur, next)) {
+                    return false;
+                }
+            }
+            else if (next != pre) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+
+//////////////////
+//////////////////below is a tedious way
 class IsValidTree {
 	/**
 	 * @param num: edge with two nodes' value          
