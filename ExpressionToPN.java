@@ -87,9 +87,6 @@ class Solution {
 					}
 					else {
 						while (!stk.isEmpty() && order(s) <= order(stk.peek())) {
-							if (stk.peek() == "(") {
-								break;
-							}
 							res.add(stk.pop());
 						}
 						stk.push(s);
@@ -132,6 +129,6 @@ class Solution {
 			if (s == "+" || s == "-") {
 				return 1;
 			}
-			return 3;
+			return 0;
 		}
 }
