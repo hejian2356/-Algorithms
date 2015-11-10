@@ -6,6 +6,21 @@ class Solution {
         if n = 3, then the max sum should be 1+4+700
 	 */
 	
+        //a better solution written by @lianlu, make some modification
+	public int getmaxsum(int[][] nums, int n) {
+		int[][] dp = new int[nums.length+1][n+1];
+		for (int k = 1; k <= n; k++) {
+			for (int i = 1; i <= nums.length; i++) {
+				int len = nums[i-1].length, sum = 0;
+				for (int j = 0; j < len && j < k; j++) {
+					sum += nums[i-1][j];
+					dp[i][k] = Math.max(dp[i][k], sum+dp[i-1][k-j-1]);
+				}
+			}
+		}
+		return dp[nums.length][n];
+	}
+       
 	
 	//dp
 	public int getMax(int n) {
