@@ -1,6 +1,6 @@
 class Solution {
 	/*
-	 * undirected graph detect cycle
+	 * directed graph detect cycle
 	 */
 	public boolean hasCycle(List<List<Integer>> neighbor, int n) {
 		int[] visited = new int[n];
@@ -31,7 +31,7 @@ class Solution {
 	}
 	
 	/*
-	 * directed graph detect cycle
+	 * undirected graph detect cycle
 	 */
 	public boolean hasCycleDirected(List<List<Integer>> neighbor, int n) {
 		int[] visited = new int[n];
